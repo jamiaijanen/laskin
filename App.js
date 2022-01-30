@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
 import React, { useState } from 'react';
 
 export default function App() {
@@ -8,13 +8,21 @@ export default function App() {
   const [number2, setNumber2] = useState();
   const [text, setText] = useState('Result: ')
   const [answer, setAnswer] = useState();
+  const [previousAnswers, setPreviousAnswers] = useState([]);
+  const [history, setHistory] = useState('History')
 
   const plus = () => {
-    setAnswer(parseInt(number1) + parseInt(number2))
+    const calculation = parseInt(number1) + parseInt(number2)
+    setAnswer(calculation)
+    const jep = number1 + " + " + number2 + " = " + calculation
+    setPreviousAnswers([...previousAnswers, { key: jep }])
   }
 
   const minus = () => {
-    setAnswer(parseInt(number1) - parseInt(number2))
+    const calculation = parseInt(number1) - parseInt(number2)
+    setAnswer(calculation)
+    const jep = number1 + " - " + number2 + " = " + calculation
+    setPreviousAnswers([...previousAnswers, { key: jep }])
   }
 
   return (
@@ -29,8 +37,17 @@ export default function App() {
       <View style={styles.button}>
         <Button onPress={plus} title="+" />
         <Button onPress={minus} title="-" />
-        <StatusBar style="auto" />
       </View>
+      <Text>
+      {history}
+      </Text>
+      <FlatList style={styles.list}
+        data={previousAnswers}
+        renderItem={({item}) =>
+          <Text>{item.key}</Text>
+        }
+      />
+      <StatusBar style="auto" />
     </View>
   );
 }
