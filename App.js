@@ -1,15 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, FlatList, TextComponent } from 'react-native';
 import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+function HomeScreen({ navigation }) {
 
   const [number1, setNumber1] = useState();
   const [number2, setNumber2] = useState();
   const [text, setText] = useState('Result: ')
   const [answer, setAnswer] = useState();
   const [previousAnswers, setPreviousAnswers] = useState([]);
-  const [history, setHistory] = useState('History')
 
   const plus = () => {
     const calculation = parseInt(number1) + parseInt(number2)
@@ -37,7 +40,20 @@ export default function App() {
       <View style={styles.button}>
         <Button onPress={plus} title="+" />
         <Button onPress={minus} title="-" />
+        <Button title='History' onPress={() => navigation.navigate('History', {previousAnswers})}/>
       </View>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+function HistoryScreen({ route }) {
+
+  const [history, setHistory] = useState('History')
+  const { previousAnswers } = route.params;
+
+  return(
+    <View style={styles.container}>
       <Text>
       {history}
       </Text>
@@ -48,9 +64,20 @@ export default function App() {
           <Text>{item}</Text>
         }
       />
-      <StatusBar style="auto" />
     </View>
-  );
+  )
+}
+
+export default function App() {
+  return(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="History" component={HistoryScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+
 }
 
 const styles = StyleSheet.create({
