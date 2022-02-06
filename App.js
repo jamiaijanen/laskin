@@ -15,14 +15,14 @@ export default function App() {
     const calculation = parseInt(number1) + parseInt(number2)
     setAnswer(calculation)
     const jep = number1 + " + " + number2 + " = " + calculation
-    setPreviousAnswers([...previousAnswers, { key: jep }])
+    setPreviousAnswers([...previousAnswers, jep])
   }
 
   const minus = () => {
     const calculation = parseInt(number1) - parseInt(number2)
     setAnswer(calculation)
     const jep = number1 + " - " + number2 + " = " + calculation
-    setPreviousAnswers([...previousAnswers, { key: jep }])
+    setPreviousAnswers([...previousAnswers, jep])
   }
 
   return (
@@ -43,8 +43,9 @@ export default function App() {
       </Text>
       <FlatList style={styles.list}
         data={previousAnswers}
-        renderItem={({item}) =>
-          <Text>{item.key}</Text>
+        keyExtractor={ (item, index) => index }
+        renderItem={({ item }) =>
+          <Text>{item}</Text>
         }
       />
       <StatusBar style="auto" />
